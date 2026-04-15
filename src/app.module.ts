@@ -21,7 +21,7 @@ import { UploadModule } from './upload/upload.module';
     AuthModule,
     UploadModule,
   ],
-  controllers: [AppController, UserController],
-  providers: [AppService, UserService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
