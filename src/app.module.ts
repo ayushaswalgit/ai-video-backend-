@@ -9,6 +9,7 @@ import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
+import { VideoModule } from './video/video.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UploadModule } from './upload/upload.module';
     PrismaModule,
     AuthModule,
     UploadModule,
+    VideoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

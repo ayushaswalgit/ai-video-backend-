@@ -12,7 +12,11 @@ export class UploadService {
     if (!files || files.length === 0) {
       throw new Error('No files uploaded');
     }
-
+    const a = 5;
+    const b = 5;
+    if (a === b) {
+      console.log('a is equal to b');
+    }
     const urls: string[] = [];
 
     for (const file of files) {
