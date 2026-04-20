@@ -8,7 +8,12 @@ import * as fs from 'fs';
 import axios from 'axios';
 import ffmpeg from 'fluent-ffmpeg';
 import ffmpegPath from 'ffmpeg-static';
+import { createClient } from '@supabase/supabase-js';
 
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_KEY!,
+);
 ffmpeg.setFfmpegPath(ffmpegPath as string);
 
 @Injectable()
@@ -71,9 +76,33 @@ export class VideoService {
         .save(outputPath);
     });
 
+    const fileName = `video-${Date.now()}.mp4`;
+
+    const fileBuffer = fs.readFileSync(outputPath);
+
+    const { error } = await supabase.storage
+      .from('uploads')
+      .upload(fileName, fileBuffer, {
+        contentType: 'video/mp4',
+      });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const { data } = supabase.storage.from('uploads').getPublicUrl(fileName);
+
+    fs.unlinkSync(outputPath);
+
+    imagePaths.forEach((path) => {
+      if (fs.existsSync(path)) {
+        fs.unlinkSync(path);
+      }
+    });
+
     return {
       message: 'Video generated successfully',
-      videoPath: outputPath,
+      videoUrl: data.publicUrl,
     };
   }
 }
