@@ -5,7 +5,7 @@ import { VideoService } from './video.service';
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}
   @Post('generate')
-  generateVideo(@Body() Body: { image: string[] }) {
-    console.log(Body.image);
+  async generateVideo(@Body() Body: { image: string[] }) {
+    return await this.videoService.generateVideo(Body.image);
   }
 }
