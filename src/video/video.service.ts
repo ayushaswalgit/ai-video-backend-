@@ -22,34 +22,50 @@ export class VideoService {
   }
 
   async generateVideo(image: string[]) {
+    if (image.length > 3) {
+      throw new Error('Max 3 images allowed');
+    }
+
     const imagePaths: string[] = [];
 
     for (let i = 0; i < image.length; i++) {
       const url = image[i];
       const filePath = path.join(this.tempdir, `image${i}.jpg`);
+
       const response = await axios.get(url, {
         responseType: 'stream',
       });
-      fs.writeFileSync(filePath, response.data);
+
+      const writer = fs.createWriteStream(filePath);
+
+      await new Promise((resolve, reject) => {
+        response.data.pipe(writer);
+        writer.on('finish', () => resolve(true));
+        writer.on('error', reject);
+      });
+
       imagePaths.push(filePath);
     }
-    const outputPath = path.join(this.tempdir, `video-${Date.now()}.mp4`);
 
-    // eslint-disable-next-line prettier/prettier
+    const outputPath = path.join(this.tempdir, `video-${Date.now()}.mp4`);
 
     await new Promise((resolve, reject) => {
       const command = ffmpeg();
+
       imagePaths.forEach((imagePath) => {
         command.input(imagePath).inputOptions(['-loop 1', '-t 2']);
       });
+
       command
-        .outputOptions(['-c:v libx264', '-r 25', '-pix_fmt yuv420p'])
-        .on('end', () => {
-          console.log('Video created:', outputPath);
-          resolve(true);
-        })
+        .outputOptions([
+          '-c:v libx264',
+          '-r 25',
+          '-pix_fmt yuv420p',
+          '-vf scale=720:1280',
+        ])
+        .on('end', () => resolve(true))
         .on('error', (err) => {
-          console.log('FFmpeg error:', err);
+          console.log('FFmpeg error FULL:', err);
           reject(err);
         })
         .save(outputPath);
