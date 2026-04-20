@@ -28,7 +28,7 @@ export class VideoService {
       const url = image[i];
       const filePath = path.join(this.tempdir, `image${i}.jpg`);
       const response = await axios.get(url, {
-        responseType: 'arraybuffer',
+        responseType: 'stream',
       });
       fs.writeFileSync(filePath, response.data);
       imagePaths.push(filePath);
