@@ -13,7 +13,7 @@ export class CaptionService {
       });
       const base64 = Buffer.from(response.data).toString('base64');
       const model = this.gentAi.getGenerativeModel({
-        model: 'gemini-1.5-flash',
+        model: 'gemini-1.5-flash-latest',
       });
       const result = await model.generateContent([
         {
