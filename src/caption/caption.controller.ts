@@ -7,6 +7,7 @@ export class CaptionController {
 
   @Post('/generate-caption')
   async generateCaption(@Body() body: { imageurl: string }) {
+    console.log('BODY:', body);
     return this.captionService.generateCaption(body.imageurl);
   }
 }
