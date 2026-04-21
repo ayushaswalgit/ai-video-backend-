@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
 import { VideoModule } from './video/video.module';
+import { CaptionModule } from './caption/caption.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { VideoModule } from './video/video.module';
     AuthModule,
     UploadModule,
     VideoModule,
+    CaptionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
